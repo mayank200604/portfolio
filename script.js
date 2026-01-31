@@ -151,18 +151,23 @@ function initProjectCards() {
     });
 }
 
-// Scroll animations for elements
+// Scroll animations for elements - OPTIMIZED for better performance
 function initScrollAnimations() {
     const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
+        threshold: 0.2,  // Increased for better performance
+        rootMargin: '0px 0px -100px 0px'  // More conservative triggering
     };
 
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
+                // Use requestAnimationFrame for smoother animation
+                requestAnimationFrame(() => {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                });
+                // Unobserve after animating to improve performance
+                observer.unobserve(entry.target);
             }
         });
     }, observerOptions);
@@ -172,8 +177,8 @@ function initScrollAnimations() {
     
     animatedElements.forEach(el => {
         el.style.opacity = '0';
-        el.style.transform = 'translateY(30px)';
-        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        el.style.transform = 'translateY(20px)';
+        el.style.transition = 'opacity 0.4s ease, transform 0.4s ease';  // Faster animation
         observer.observe(el);
     });
 }
@@ -289,18 +294,10 @@ function showNotification(message, type = 'info') {
     }, 5000);
 }
 
-// Parallax effect for hero section
+// Parallax effect for hero section - DISABLED for better performance
 function initParallaxEffect() {
-    const hero = document.querySelector('.hero');
-    
-    window.addEventListener('scroll', () => {
-        const scrolled = window.pageYOffset;
-        const parallax = scrolled * 0.5;
-        
-        if (hero) {
-            hero.style.transform = `translateY(${parallax}px)`;
-        }
-    });
+    // Parallax effect disabled to prevent scrolling issues
+    return;
 }
 
 // Animated counter for statistics
